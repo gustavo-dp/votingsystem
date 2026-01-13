@@ -10,7 +10,7 @@ const PollModel = {
         const sql = 'INSERT INTO options (poll_id,option_text) VALUE ?';
         const optionsData = options.map(opt => [pollId, opt]);
 
-        await db.query(aql, [optionsData]);
+        await db.query(sql, [optionsData]);
 
     },
     findAll: async () => {

@@ -9,7 +9,7 @@ const VoteModel = {
 
     createVote: async (userId, pollId, optionId) => {
         const sql = 'INSERT INTO votes (user_id, poll_id,option_id) VALUES (?,?,?)'
-        await db.query(aql, [userId, pollId, optionOd]);
+        await db.query(sql, [userId, pollId, optionId]);
     },
     getResults: async (pollId) => {
         const sql = `

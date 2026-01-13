@@ -1,5 +1,5 @@
 const PollModel = require('../models/PollModel');
-const VoteModel = require('../models/VotelModel');
+const VoteModel = require('../models/VoteModel');
 
 module.exports = {
     create: async (req, res) => {
@@ -23,6 +23,21 @@ module.exports = {
             res.json(polls);
         } catch (error) {
             res.status(500).json({ error: "Erro ao buscar enquetes" });
+        }
+    },
+    getById: async (req, res) => {
+        const { id } = req.params;
+        try {
+            const poll = await PollModel.findById(id);
+            if (!poll) return res.status(404).json({ error: "Enquete não encontrada" });
+
+
+            const options = await VoteModel.getResults(id);
+
+            res.json({ poll, options });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: "Erro ao buscar detalhes da enquete" });
         }
     },
     vote: async (req, res) => {
