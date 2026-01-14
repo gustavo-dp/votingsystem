@@ -21,7 +21,16 @@ const PollModel = {
         const sql = 'SELECT * FROM polls WHERE id = ?'
         const [rows] = await db.query(sql, [pollId]);
         return rows[0];
+    },
+    getOptions: async (id) => {
+        const sql = 'SELECT * FROM options WHERE poll_id = ?';
+
+
+        const [rows] = await db.query(sql, [id]);
+
+        return rows;
     }
+
 }
 
 module.exports = PollModel;

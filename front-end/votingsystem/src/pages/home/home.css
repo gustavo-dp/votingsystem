@@ -1,0 +1,25 @@
+/* src/pages/home/Home.css */
+
+.home-header {
+    margin-bottom: 32px;
+}
+
+.home-header h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--text-main);
+}
+
+.home-header p {
+    color: var(--text-muted);
+    margin-top: 8px;
+}
+
+/* O Grid Responsivo */
+.polls-grid {
+    display: grid;
+    /* Cria colunas automaticamente (minimo de 320px) */
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 24px;
+}

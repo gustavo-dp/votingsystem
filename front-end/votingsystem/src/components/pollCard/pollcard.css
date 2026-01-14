@@ -1,0 +1,84 @@
+/* src/components/pollCard/pollCard.css */
+
+.poll-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 200px;
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.poll-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px -10px rgba(0, 0, 0, 0.1);
+    border-color: #cbd5e1;
+}
+
+/* Status (Pill) */
+.card-header {
+    margin-bottom: 16px;
+}
+
+.card-status {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.status-active {
+    color: var(--success);
+}
+
+.status-closed {
+    color: var(--text-muted);
+}
+
+/* Título */
+.card-title {
+    font-size: 1.15rem;
+    font-weight: 600;
+    line-height: 1.4;
+    margin-bottom: 16px;
+    color: var(--text-main);
+}
+
+/* Rodapé do Card */
+.card-meta {
+    margin-top: auto;
+    padding-top: 16px;
+    border-top: 1px solid var(--bg-body);
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+/* Barrinhas Decorativas (Visual Only) */
+.mini-bars {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+}
+
+.bar {
+    height: 6px;
+    border-radius: 4px;
+    background: var(--border);
+}
+
+.bar.fill {
+    background: var(--primary);
+}
