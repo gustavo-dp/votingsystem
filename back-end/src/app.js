@@ -11,5 +11,6 @@ app.use(express.json());
 
 
 app.use('/polls', pollRoutes);
+app.use('/auth', authRoutes)
 
 module.exports = app;
