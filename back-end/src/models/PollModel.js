@@ -14,15 +14,23 @@ const PollModel = {
 
     },
     findAll: async () => {
-        const [rows] = await db.query('SELECT * FROM polls');
+        const sql = `
+            SELECT p.*, COUNT(v.id) as total_votes
+            FROM polls p
+            LEFT JOIN votes v ON p.id = v.poll_id
+            GROUP BY p.id
+            ORDER BY p.start_date DESC
+        `;
+        const [rows] = await db.query(sql);
         return rows;
     },
     findById: async (pollId) => {
+
         const sql = 'SELECT * FROM polls WHERE id = ?'
         const [rows] = await db.query(sql, [pollId]);
         return rows[0];
     },
-    getOptions: async (id) => {
+    getOptionsById: async (id) => {
         const sql = 'SELECT * FROM options WHERE poll_id = ?';
 
 

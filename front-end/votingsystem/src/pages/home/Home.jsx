@@ -9,8 +9,8 @@ const Home = () => {
     const [polls, setPolls] = useState([]);
     const [selectedPoll, setSelectedPoll] = useState(null);
     const [pollOptions, setPollOptions] = useState([]);
+    const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
-    // 1. Busca a lista de enquetes ao carregar a página
     useEffect(() => {
         fetchPolls();
     }, []);
@@ -22,28 +22,27 @@ const Home = () => {
         } catch (error) { console.error("Erro ao buscar polls"); }
     }
 
-    // 2. Lógica de REAL TIME (Polling)
-    // Sempre que 'selectedPoll' mudar (ou seja, modal abrir), isso roda
+
     useEffect(() => {
         let intervalId;
 
         if (selectedPoll) {
-            // Busca imediatamente ao abrir
+
             fetchOptions(selectedPoll.id);
 
-            // E configura um relógio para buscar de novo a cada 2 segundos
+
             intervalId = setInterval(() => {
                 fetchOptions(selectedPoll.id);
             }, 2000);
         }
 
-        // Limpeza: Quando fechar o modal, para de buscar para não pesar o servidor
+
         return () => {
             if (intervalId) clearInterval(intervalId);
         };
     }, [selectedPoll]);
 
-    // Função separada para buscar os votos (usada pelo intervalo)
+
     const fetchOptions = async (pollId) => {
         try {
             const response = await api.get(`/polls/${pollId}/results`);
@@ -55,22 +54,18 @@ const Home = () => {
 
     const handleVote = async (optionId) => {
         try {
-            await api.post('/votes', {
-                poll_id: selectedPoll.id,
+            await api.post(`/polls/${selectedPoll.id}/vote`, {
                 option_id: optionId
             });
 
-            // Assim que votar, atualiza a lista IMEDIATAMENTE (sem esperar os 2s)
-            fetchOptions(selectedPoll.id);
 
-            // Opcional: Atualiza também a lista de fora para mostrar o total de votos novos
             fetchPolls();
 
         } catch (error) {
+            console.error(error);
             alert("Erro ao registrar voto.");
         }
     };
-
     return (
         <div>
             <div className="polls-grid">
@@ -79,13 +74,12 @@ const Home = () => {
                         key={poll.id}
                         data={poll}
                         onClick={() => {
-                            setPollOptions([]); // Limpa para não mostrar dados da enquete anterior
+                            setPollOptions([]);
                             setSelectedPoll(poll);
                         }}
                     />
                 ))}
             </div>
-
             {selectedPoll && (
                 <PollModal onClose={() => setSelectedPoll(null)}>
                     <h2 style={{ marginBottom: '20px' }}>{selectedPoll.title}</h2>
@@ -107,29 +101,13 @@ const Home = () => {
                                     cursor: 'pointer'
                                 }}
                             >
-                                {/* BARRA DE FUNDO (Opcional: Se quiser remover a barra, apague essa div) */}
-                                <div style={{
-                                    position: 'absolute',
-                                    top: 0, left: 0, bottom: 0,
-                                    // Cálculo simples apenas para a barra visual (proporção)
-                                    // Se a enquete tiver 0 votos no total, barra é 0
-                                    width: `${pollOptions.reduce((acc, o) => acc + Number(o.total_votes), 0) > 0
-                                        ? (option.total_votes / pollOptions.reduce((acc, o) => acc + Number(o.total_votes), 0)) * 100
-                                        : 0}%`,
-                                    backgroundColor: 'rgba(37, 99, 235, 0.1)',
-                                    zIndex: 0,
-                                    pointerEvents: 'none',
-                                    transition: 'width 0.5s ease'
-                                }}></div>
-
-                                {/* CONTEÚDO (Texto e Número de Votos) */}
                                 <div style={{
                                     position: 'relative', zIndex: 1, pointerEvents: 'none',
                                     display: 'flex', justifyContent: 'space-between', alignItems: 'center'
                                 }}>
                                     <span style={{ fontWeight: 500 }}>{option.option_text}</span>
 
-                                    {/* AQUI ESTÁ A MUDANÇA: MOSTRANDO NÚMERO DE VOTOS */}
+
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                                         <span style={{ fontWeight: 700, fontSize: '1.1rem', color: '#2563eb' }}>
                                             {option.total_votes}
@@ -141,6 +119,14 @@ const Home = () => {
                         ))}
                     </div>
                 </PollModal>
+            )}
+            {isCreateModalOpen && (
+                <CreatePollModal
+                    onClose={() => setIsCreateModalOpen(false)}
+                    onSuccess={() => {
+                        fetchPolls();
+                    }}
+                />
             )}
         </div>
     )

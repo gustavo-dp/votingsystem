@@ -3,27 +3,28 @@ import { NavLink, Link } from 'react-router-dom'
 import BlueButton from '../blueButton/BlueButton'
 import './navbar.css'
 
-const Navbar = () => {
+
+const Navbar = ({ onOpenCreate }) => {
     return (
         <nav className="navbar">
             <div className="nav-container">
                 <div className="nav-left">
                     <Link to="/" className="logo">VotaSystem.</Link>
-
                     <div className="nav-links">
                         <NavLink to="/" className={({ isActive }) => isActive ? "active" : ""}>
                             Feed
                         </NavLink>
-                        <NavLink to="/meus-votos" className={({ isActive }) => isActive ? "active" : ""}>
-                            Meus Votos
-                        </NavLink>
+                    </div>
+                    <div className="nav-left">
+                        <Link to="/login" className={({ isActive }) => isActive ? "active" : ""}>
+                            Login
+                        </Link>
                     </div>
                 </div>
-
                 <div className="nav-actions">
-                    <NavLink to="/create" style={{ textDecoration: 'none' }}>
-                        <BlueButton>Nova Enquete</BlueButton>
-                    </NavLink>
+                    <BlueButton onClick={onOpenCreate}>
+                        Nova Enquete
+                    </BlueButton>
                 </div>
 
             </div>

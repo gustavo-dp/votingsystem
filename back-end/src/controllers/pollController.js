@@ -43,7 +43,7 @@ module.exports = {
     vote: async (req, res) => {
         const { id } = req.params;
         const { option_id } = req.body;
-        const userId = 1; //TODO
+        const userId = req.user.id;
 
         try {
             const poll = await PollModel.findById(id);
