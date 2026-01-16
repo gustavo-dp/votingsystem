@@ -43,7 +43,7 @@ module.exports = {
     vote: async (req, res) => {
         const { id } = req.params;
         const { option_id } = req.body;
-        const userId = 1; //TODO
+        const userId = req.user.id;
 
         try {
             const poll = await PollModel.findById(id);
@@ -63,6 +63,26 @@ module.exports = {
         } catch (error) {
             console.error(error);
             res.status(500).json({ error: "Erro ao votar" });
+        }
+    },
+    getOptionsById: async (req, res) => {
+        const { id } = req.params;
+        try {
+            const options = await PollModel.getOptions(id);
+            res.status(200).json(options);
+        } catch (error) {
+            console.error("Erro no controller:", error);
+            res.status(500).json({ error: 'Erro ao buscar opções' });
+        }
+    },
+    getVoteResults: async (req, res) => {
+        try {
+            const { id } = req.params;
+            const result = await VoteModel.getResults(id);
+            res.status(200).json(result);
+        } catch (error) {
+            console.error("Erro no controller", error);
+            res.status(500).json({ error: 'error buscar votos' })
         }
     }
 
