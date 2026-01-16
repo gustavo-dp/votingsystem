@@ -5,9 +5,20 @@ import BlueButton from '../blueButton/BlueButton';
 import './createpollmodal.css';
 
 const CreatePollModal = ({ onClose, onSuccess }) => {
+
+    const getCurrentLocalTime = () => {
+        const now = new Date();
+        const offsetMs = now.getTimezoneOffset() * 60000;
+        const localDate = new Date(now.getTime() - offsetMs);
+        return localDate.toISOString().slice(0, 16);
+    };
+
+
     const [title, setTitle] = useState('');
     const [endDate, setEndDate] = useState('');
-    const [startDate, setStartDate] = useState(new Date().toISOString().slice(0, 16));
+
+
+    const [startDate, setStartDate] = useState(getCurrentLocalTime());
 
     const [options, setOptions] = useState(['', '']);
     const [isLoading, setIsLoading] = useState(false);
@@ -19,11 +30,9 @@ const CreatePollModal = ({ onClose, onSuccess }) => {
         setOptions(newOptions);
     };
 
-
     const addOption = () => {
         setOptions([...options, '']);
     };
-
 
     const removeOption = (index) => {
         if (options.length > 2) {
@@ -35,7 +44,6 @@ const CreatePollModal = ({ onClose, onSuccess }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-
         const validOptions = options.filter(opt => opt.trim() !== '');
         if (validOptions.length < 2) {
             alert("A enquete precisa de pelo menos 2 opções válidas.");
@@ -45,7 +53,6 @@ const CreatePollModal = ({ onClose, onSuccess }) => {
         setIsLoading(true);
 
         try {
-
             await api.post('/polls', {
                 title,
                 start_date: startDate,
@@ -71,7 +78,6 @@ const CreatePollModal = ({ onClose, onSuccess }) => {
 
             <form onSubmit={handleSubmit} className="create-poll-form">
 
-
                 <div className="form-group">
                     <label>Título da Pergunta</label>
                     <input
@@ -83,7 +89,6 @@ const CreatePollModal = ({ onClose, onSuccess }) => {
                         required
                     />
                 </div>
-
 
                 <div className="form-group">
                     <label>Início da Votação</label>
@@ -105,7 +110,6 @@ const CreatePollModal = ({ onClose, onSuccess }) => {
                         required
                     />
                 </div>
-
 
                 <div className="options-section">
                     <label>Opções de Resposta</label>

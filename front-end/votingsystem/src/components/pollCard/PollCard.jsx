@@ -1,16 +1,21 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react' // <--- Importe useState e useEffect
 import './pollcard.css'
 
 const PollCard = ({ data: poll, onClick }) => {
+    const [now, setNow] = useState(new Date());
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setNow(new Date());
+        }, 1000);
 
-    const now = new Date();
+
+        return () => clearInterval(timer);
+    }, []);
+
     const startDate = new Date(poll.start_date);
     const endDate = new Date(poll.end_date);
-
-
     const isNotStarted = now < startDate;
     const isClosed = now > endDate;
-
 
     const formatDate = (dateString) => {
         if (!dateString) return '--/--/----';
@@ -43,6 +48,7 @@ const PollCard = ({ data: poll, onClick }) => {
 
             <div className="card-meta">
                 <span>{poll.total_votes || 0} votos</span>
+
                 <span>
                     {isNotStarted
                         ? `Inicia: ${formatDate(poll.start_date)}`
